@@ -2,29 +2,25 @@ import streamlit as st
 
 def login():
 
-    if "logged_in" not in st.session_state:
-        st.session_state.logged_in = False
+    USER = st.secrets.get("USER", "admin")
+    PASS = st.secrets.get("PASS", "gpu123")
 
-    if st.session_state.logged_in:
-        return   # ⭐ IMPORTANT → do not show login UI
+    if "auth" not in st.session_state:
+        st.session_state.auth = False
 
-    # ⭐ Clear page and show only login
-    st.empty()
+    if not st.session_state.auth:
 
-    st.markdown("## 🔐 GPU Monitoring Login")
+        st.title("🔐 GPU Monitor Login")
 
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
+        u = st.text_input("Username")
+        p = st.text_input("Password", type="password")
 
-    if st.button("Login"):
+        if st.button("Login"):
 
-        if (
-            username == st.secrets["USER"]
-            and password == st.secrets["PASS"]
-        ):
-            st.session_state.logged_in = True
-            #st.rerun()
-        else:
-            st.error("Invalid credentials")
+            if u == USER and p == PASS:
+                st.session_state.auth = True
+                st.rerun()
+            else:
+                st.error("Invalid credentials")
 
-    st.stop()   # ⭐ VERY IMPORTANT → stops dashboard rendering
+        st.stop()
